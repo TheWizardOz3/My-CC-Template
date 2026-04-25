@@ -1,0 +1,28 @@
+{
+  "_comment": "Personal overrides for Claude Code in this project. Copy to settings.local.json (gitignored). Anything here takes precedence over .claude/settings.json. Examples below — uncomment what you want.",
+
+  "_examples": {
+    "permissions": {
+      "allow": [
+        "Bash(npm run dev:*)",
+        "Bash(pnpm test:*)",
+        "WebFetch(domain:docs.anthropic.com)"
+      ],
+      "deny": [],
+      "defaultMode": "acceptEdits"
+    },
+
+    "env": {
+      "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "32000",
+      "BASH_DEFAULT_TIMEOUT_MS": "180000"
+    },
+
+    "hooks": {
+      "_disable_a_hook": "To disable any hook from this template without editing settings.json, set the matching key to an empty array, e.g.:",
+      "Notification": []
+    },
+
+    "includeCoAuthoredBy": false,
+    "includeGitInstructions": false
+  }
+}
