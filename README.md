@@ -13,8 +13,9 @@ A Claude Code-native project template. Drop into a fresh repo and you get: enfor
 ├── .claude/                  # Claude Code-only: skills, agents, hooks, settings
 │   ├── settings.json         # permissions + hooks wiring
 │   ├── hooks/                # safety guard, session start, notify, doc-sync
-│   ├── skills/               # 11 user- and model-invocable workflow skills
+│   ├── skills/               # 12 user- and model-invocable workflow skills
 │   └── agents/doc-updater.md # the one project-specific subagent
+├── .agents/                  # cross-agent location for product-marketing-context.md
 ├── AGENTS.md                 # universal rulebook (Claude Code, Cursor, Codex)
 ├── CLAUDE.md                 # Claude Code overlay — imports AGENTS.md
 ├── docs/                     # filled in via /new-project; updated as you build
@@ -24,8 +25,10 @@ A Claude Code-native project template. Drop into a fresh repo and you get: enfor
 │   ├── project_status.md     # current state (read this first each session)
 │   ├── changelog.md          # what changed
 │   ├── design-references.md  # benchmark apps for /ux-review (optional)
+│   ├── marketing-strategy.md # rolling marketing notes (in-progress, completed, ideas)
 │   ├── Features/             # per-feature specs and task lists
 │   └── standards/            # coding/errors/security/testing/perf — load on demand
+├── marketing/                # output dir for marketing collateral (copy/emails/ads/assets)
 └── README.md                 # this file
 ```
 
@@ -95,8 +98,9 @@ Every workflow lives in `.claude/skills/`. Each is **user-invocable as a slash c
 | `/ux-review` | Evaluate a UI surface for usability, polish, and consistency with `docs/design-references.md`. Drives a real browser. |
 | `/agent-browser` | Browser automation primitive used by `/test` and `/ux-review`. |
 | `/skill-creator` | Meta-tool for adding or evolving skills in this template. |
+| `/marketing-context` | Bridge skill — pre-populates `.agents/product-marketing-context.md` from dev docs and asks for the marketing-only gaps. Foundation for every plugin marketing skill. See [Marketing capabilities](#marketing-capabilities). |
 
-The full intent-to-skill routing table — including built-in skills like `/simplify`, `/security-review`, and `/review` that are delegated to but not duplicated — lives in [AGENTS.md §13](AGENTS.md#13-skill-routing-table).
+The full intent-to-skill routing table — including built-in skills like `/simplify`, `/security-review`, and `/review` that are delegated to but not duplicated, plus the 39 plugin marketing skills — lives in [AGENTS.md §13](AGENTS.md#13-skill-routing-table).
 
 ### Agents
 
@@ -131,6 +135,41 @@ The template treats docs as **part of completing the work, not a separate task**
 - `doc-sync-check.sh` — surfaces missed updates as a soft reminder (never a block).
 
 The `doc-updater` agent enforces brevity in its prompt: changelog entries are ≤2 lines, not paragraphs.
+
+---
+
+## Marketing capabilities
+
+Beyond shipping the app, the template can produce marketing collateral and (optionally) host a marketing site rooted in the actual product being built. The marketing playbooks themselves are not vendored — they come from the upstream [`coreyhaines31/marketingskills`](https://github.com/coreyhaines31/marketingskills) plugin, installed once per machine and shared across every project.
+
+### Prerequisites
+
+| Requirement | Why | Install |
+|-------------|-----|---------|
+| Node 18+ | Marketing tools include zero-dep Node CLIs (GA4 pulls, Stripe queries, Resend sends, etc.) | `brew install node` |
+| Plugin install (once per machine) | Provides 39 marketing skills + 51 CLIs | `/plugin marketplace add coreyhaines31/marketingskills` then `/plugin install marketing-skills@marketingskills`, then restart the session |
+| Service API keys | Only for the integrations you actually use; stored in your project's `.env` | per-service |
+
+### What you get
+
+- **39 plugin skills** covering CRO, copy, SEO, paid, email, retention, strategy, and sales/RevOps. Claude invokes them **contextually** when you describe a task ("rewrite the homepage hero", "audit our SEO", "plan a welcome email sequence") — they don't appear in the slash menu under their `marketing-skills:<name>` namespace. The full catalog lives in the [plugin README](https://github.com/coreyhaines31/marketingskills).
+- **One project-side bridge skill** — [`/marketing-context`](.claude/skills/marketing-context/SKILL.md) — that pre-populates `.agents/product-marketing-context.md` from `docs/product_spec.md`, `docs/architecture.md`, `README.md`, and sample components in `src/`, then asks only for the marketing-only gaps (personas, voice, customer language, competitors, proof points, pricing positioning). Every plugin skill reads this file before doing anything else.
+- **Output destinations** — `marketing/` for collateral (`copy/`, `emails/`, `ads/`, `assets/`) and `apps/marketing/` for a marketing site if you choose to scaffold one. The site stack (Next.js / Astro / plain HTML) is deliberately deferred until first use; capture the decision in `docs/decision_log.md`.
+- **Rolling notes** in [docs/marketing-strategy.md](docs/marketing-strategy.md) — same shape as `project_status.md`, marketing-focused.
+
+### Workflow at a glance
+
+1. Build the app first (`/new-project` → `/plan` → `/build` → `/ship`).
+2. Install the plugin once per machine (see prerequisites). Restart the session so skills load.
+3. Run [`/marketing-context`](.claude/skills/marketing-context/SKILL.md) to generate `.agents/product-marketing-context.md`.
+4. Describe a marketing task; Claude invokes the matching plugin skill. Outputs land in `marketing/`.
+5. Optional: scaffold `apps/marketing/`, build it with `/build`, review it with `/ux-review`, ship it with `/ship`.
+
+Re-run `/marketing-context` whenever your product or positioning shifts — it's idempotent and surfaces drift section by section. Full workflow detail in [AGENTS.md §16](AGENTS.md#16-marketing-workflow).
+
+### Customizing an upstream skill
+
+Copy `~/.claude/plugins/cache/marketingskills/marketing-skills/<version>/skills/<name>/` into `.claude/skills/<name>/` and edit. The project version wins on the unprefixed slash form — no settings change needed (verified in Phase M1 of the [marketing restructure plan](RESTRUCTURE_MARKETING_PLAN.md)).
 
 ---
 

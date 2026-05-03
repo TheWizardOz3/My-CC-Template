@@ -27,11 +27,15 @@ If `agent-browser` skill is not yet installed, stop and surface that — manual 
 
 ## Step 1: Load the consistency benchmark
 
-Read `docs/design-references.md` (created during `/new-project`).
+Read `docs/design-references.md` (filled during `/new-project` Phase 5; ships as a skeleton).
 
-If the file doesn't exist or has no entries, ask the user for 1–3 reference apps before proceeding. Without a benchmark, "consistency" has no meaning — don't make one up.
+If the file still contains `{{PLACEHOLDER}}` strings or has no real entries, ask the user for 1–3 reference apps before proceeding. Without a benchmark, "consistency" has no meaning — don't make one up.
 
 Keep the references in working memory: name + what specifically is admired (e.g., "Linear: keyboard navigation", "Stripe Dashboard: typography hierarchy").
+
+**Load captured artifacts.** Check `docs/design-references/product/` for image files (PNG/JPG/SVG/PDF). If any exist, read them — they're concrete exemplars to match against, not just names. Cross-reference each artifact with the matching entry in `design-references.md` (entries link to artifacts inline). Treat unmatched files as additional context.
+
+> **Marketing reuse:** `docs/design-references.md` and the `design-references/brand/` subfolder double as the brand visual reference for marketing skills. When `/ux-review` runs against a marketing page (anything under `apps/marketing/`), also load `docs/design-references/brand/` artifacts — additions made there flow into both product and marketing review automatically.
 
 ---
 

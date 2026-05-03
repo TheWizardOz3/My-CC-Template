@@ -17,13 +17,14 @@ Walk a fresh clone of this template through five short interactive phases. Each 
 ## Phase 0: Pre-flight
 
 1. Check whether `docs/(ignore) brainstorm.md` exists and has content. If yes, read it — it's the user's raw seed material and replaces several questions below.
-2. Confirm scope with the user: "Run full onboarding (5 phases, ~10–15 min) or just the part you want?" Default is full.
-3. List the 5 phases:
+2. Confirm scope with the user: "Run full onboarding (6 phases, ~10–15 min) or just the part you want?" Default is full.
+3. List the 6 phases:
    1. Product spec
    2. Architecture
    3. Environment
    4. Project status
    5. Design references
+   6. Marketing setup (optional)
 
 ---
 
@@ -114,43 +115,53 @@ Write to `docs/project_status.md`. Confirm.
 
 ## Phase 5: Design references
 
-**Goal:** Capture example apps/sites whose UX/design the user admires. Saved to `docs/design-references.md` for `/ux-review` to use later.
+**Goal:** Fill the skeleton at `docs/design-references.md` with this project's visual + UX consistency benchmark. Used by `/ux-review` (product flows, polish) and marketing skills (brand, visual identity).
+
+Read `docs/design-references.md` — it ships as a skeleton with `{{PLACEHOLDER}}` strings and a companion folder structure (`docs/design-references/product/` and `docs/design-references/brand/`) for captured image/PDF artifacts. See `docs/design-references/README.md` for the naming convention and folder split.
 
 Ask:
 
 1. **Reference apps or sites** — name 2–5 products whose design quality you'd like to match (free-form)
 2. For each, **what specifically you like** — e.g., "Linear's keyboard navigation", "Stripe Dashboard's typography hierarchy", "Things 3's empty states" (free-form, one per app)
 3. **Anti-references** (optional) — products whose design you specifically want to avoid (free-form)
+4. **Cross-cutting preferences** (optional) — density, motion philosophy, color discipline, voice, etc. that aren't tied to a single reference (free-form)
+5. **Captured artifacts** — do you already have screenshots, design-system exports, or other image files for any of these references? (free-form: list filenames or "no")
+   - If yes: tell the user to drop them under `docs/design-references/product/` (flow/UX) or `docs/design-references/brand/` (visual/brand) using the naming convention in the folder's README. Reference each artifact inline in the matching entry per the linking example in `docs/design-references.md`.
+   - If no: leave the "Captured artifacts" section as-is — they can add files later, and skills will pick them up automatically.
 
-Write `docs/design-references.md`:
-
-```markdown
-# Design References
-
-> Captured during /new-project. Used by /ux-review as the consistency benchmark.
-> Update freely as taste evolves.
-
-## References
-- **<App 1>** (<URL if relevant>) — what you like: <one-liner>
-- **<App 2>** ...
-
-## Anti-references
-- **<App>** — what you want to avoid: <one-liner>
-
-## Notes
-<Any cross-cutting design preferences not tied to a specific app>
-```
+Replace the `{{PLACEHOLDER}}` strings in `docs/design-references.md` with the answers (References, Anti-references, Notes). Stamp `**Last Updated**: YYYY-MM-DD`. Don't delete the "Captured artifacts" section or the folder pointers — those are stable structure, not placeholders.
 
 Confirm.
 
 ---
 
-## Phase 6: Wrap
+## Phase 6: Marketing setup (optional)
+
+**Goal:** Decide whether to set up marketing now, and leave a marker either way.
+
+Ask once via `AskUserQuestion`:
+
+- **Set up marketing now or later?** (multiple-choice)
+  - **Later (default)** — build the product first; set up marketing context when collateral is needed
+  - **Now** — install the upstream marketing-skills plugin and run `/marketing-context` after this onboarding finishes
+
+If **Later**: append one line under "Upcoming Work" in `docs/project_status.md`:
+
+> - [ ] Marketing setup — install plugin (`/plugin marketplace add coreyhaines31/marketingskills` then `/plugin install marketing-skills@marketingskills`), then `/marketing-context` to bridge product docs into `.agents/product-marketing-context.md`
+
+If **Now**: append the same line, but mark it `[x]` once the user confirms the plugin is installed in a fresh session, and tell them to invoke `/marketing-context` next. Do not run `/marketing-context` from inside `/new-project` — plugin skills don't load mid-session, and the bridge needs the dev docs already finalized.
+
+No file is created in `marketing/` or `.agents/` by this phase. The placeholder dirs (`marketing/`, `.agents/`) are already in the template; the bridge skill populates `.agents/product-marketing-context.md` later.
+
+---
+
+## Phase 7: Wrap
 
 Summarize what was written:
 
 > Onboarded `<project-name>`.
 > Files written: `docs/product_spec.md`, `docs/architecture.md`, `docs/project_status.md`, `docs/design-references.md`, `.env.example`, plus AGENTS.md §1 + §12 placeholders.
+> Marketing: <Later — marker added to project_status | Now — plugin install pending, then /marketing-context>.
 > Next: `/plan` your first feature, or read `docs/project_status.md` to confirm priorities.
 
 Suggest the user delete `docs/(ignore) brainstorm.md` if it was used (or keep it — they may add to it).

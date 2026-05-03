@@ -9,7 +9,7 @@ Project-local hooks wired in [.claude/settings.json](../settings.json). Each run
 | `safety-guard.sh` | `PreToolUse` (Bash, WebFetch) | Blocks destructive commands (`rm`, `sudo`, force-push, broad `git add`, system-dir writes, `curl ... \| sh`, `.env` overwrites) and refuses to send commands containing literal API keys/secrets. Mirrors AGENTS.md §3. Borrowed verbatim from the `jules` repo. |
 | `session-start.sh` | `SessionStart` | Runs `git pull --ff-only` so a new session doesn't start on a stale branch. Silent on failure (e.g. detached HEAD). |
 | `notify-input.sh` | `Notification` | macOS notification (or OSC 9 escape on Linux/containers) when Claude is awaiting input and the terminal is not in the foreground. |
-| `doc-sync-check.sh` | `Stop` | Soft reminder to update `docs/changelog.md` / `docs/project_status.md` when a session has touched source files but not the docs. Anti-nag: fires at most once per session, only when 3+ source files changed, and is skipped if `/plan` or `/end-session` ran. |
+| `doc-sync-check.sh` | `Stop` | Soft reminder to update doc-of-record files. Two checks: (a) 3+ source files changed but neither `docs/changelog.md` nor `docs/project_status.md` was touched; (b) 1+ files under `marketing/` or `apps/marketing/` changed but `docs/marketing-strategy.md` was not. Anti-nag: fires at most once per session, combined into a single message, and skipped if `/plan` or `/end-session` ran. |
 
 ## Dependencies
 

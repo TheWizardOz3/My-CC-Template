@@ -49,6 +49,10 @@ Example:
 | `docs/changelog.md` | Version history, recent changes | Understanding recent modifications |
 | `docs/Features/` | Individual feature specifications | Detailed feature work |
 | `docs/standards/` | Detailed coding/error/security/testing/performance standards | On demand when writing or reviewing code |
+| `.agents/product-marketing-context.md` | Product positioning, audience, voice — read by every marketing skill | Any marketing task |
+| `docs/marketing-strategy.md` | Rolling marketing notes (in-progress, completed, ideas, blockers) | Mid-marketing-flow context |
+| `marketing/` | Output dir for marketing collateral (copy, emails, ads, assets) | When marketing skills produce artifacts |
+| `apps/marketing/` | Marketing website source (created lazily per project) | When building/editing marketing site |
 
 > **⚠️ CRITICAL:** Documentation must be kept in sync with code changes. See §11 for mandatory update triggers.
 
@@ -320,6 +324,24 @@ After completing significant work, verify:
 | Independent code review pass | `feature-dev:code-reviewer` | built-in | available |
 | Apply brief doc updates from a diff (changelog, project_status, decision_log) | `doc-updater` | project agent | available |
 
+### Marketing skills (via plugin: `coreyhaines31/marketingskills`)
+
+The bridge skill is project-side and user-invokable. The 39 upstream marketing skills are **contextually triggered** — Claude invokes them when the user describes a task that matches their description (e.g., "rewrite this landing page" → `copywriting`). They do not appear in the slash menu under their `marketing-skills:<name>` namespace.
+
+| Intent | Use | Type | Status |
+|--------|-----|------|--------|
+| Bridge dev context → marketing context (writes `.agents/product-marketing-context.md`) | `/marketing-context` | project skill | available |
+| Optimize a marketing page for conversion | describe task → `page-cro` | plugin skill (contextual) | requires plugin install |
+| Write or rewrite marketing copy | describe task → `copywriting` | plugin skill (contextual) | requires plugin install |
+| Audit SEO on the site | describe task → `seo-audit` | plugin skill (contextual) | requires plugin install |
+| Plan or write an email sequence | describe task → `email-sequence` | plugin skill (contextual) | requires plugin install |
+| Plan paid-ad campaigns or generate ad creative | describe task → `paid-ads` / `ad-creative` | plugin skill (contextual) | requires plugin install |
+| 34 more (CRO, copy, SEO, paid, retention, strategy, sales/RevOps) | see plugin README | plugin skills (contextual) | requires plugin install |
+
+> **Install once per machine:** `/plugin marketplace add coreyhaines31/marketingskills` then `/plugin install marketing-skills@marketingskills`. Restart the session for skills to load. Full catalog: [`coreyhaines31/marketingskills` README](https://github.com/coreyhaines31/marketingskills).
+
+> **Override an upstream skill:** copy `~/.claude/plugins/cache/marketingskills/marketing-skills/<version>/skills/<name>/` into `.claude/skills/<name>/` and edit. Project version wins on the unprefixed slash form — no settings change needed.
+
 ---
 
 ## 14. Cross-Tool Compatibility
@@ -333,9 +355,31 @@ This template supports multiple AI coding tools. The split:
 
 When adding new guidance: principles and standards go in `AGENTS.md` or `docs/standards/`. Tool-specific behavior (hooks, slash commands, skill descriptions) goes in `.claude/`.
 
+### Marketing skills (cross-tool note)
+
+The upstream `marketingskills` plugin follows the cross-agent Skills spec — its skills also work in Cursor, Codex, and Windsurf via the `.agents/skills/` install convention if the user prefers another tool. The shared contract is `.agents/product-marketing-context.md`, which lives at the cross-agent location and is consumable by any tool.
+
+The bridge skill (`marketing-context`) is **Claude-Code-specific** because it relies on this template's `docs/` structure and uses CC's `` !`cmd` `` dynamic-context injection. Other tools using this template would need an equivalent bridge to populate `.agents/product-marketing-context.md` from the dev docs.
+
 ---
 
-## 15. Project-Specific Guidelines
+## 16. Marketing Workflow
+
+End-to-end flow for producing marketing collateral and (optionally) a marketing site rooted in the actual product being built:
+
+1. **Build the app** with the existing dev workflow — `/new-project` → `/plan` → `/build` → `/ship`.
+2. **Install the plugin once per machine** — `/plugin marketplace add coreyhaines31/marketingskills` then `/plugin install marketing-skills@marketingskills`. Restart the session so skills load.
+3. **Generate marketing context** — run `/marketing-context`. The bridge reads `docs/product_spec.md`, `docs/architecture.md`, `README.md`, and samples `src/` for component names, then asks only for the marketing-only gaps (personas, voice, customer language, competitors, proof points, pricing positioning). Writes `.agents/product-marketing-context.md`.
+4. **Use marketing skills as needed** — describe the task ("rewrite the homepage hero", "audit our SEO", "plan a welcome email sequence") and Claude invokes the matching plugin skill contextually. Outputs land in `marketing/` (`copy/`, `emails/`, `ads/`, `assets/`).
+5. **Optional: scaffold a marketing site** at `apps/marketing/` and use `/build` to develop it. Stack choice is per-project — capture the decision in `docs/decision_log.md`.
+6. **Run `/ux-review`** on marketing pages. It's already viewport-configurable; `docs/design-references.md` doubles as marketing brand reference.
+7. **`/ship` for marketing changes** — the `doc-updater` agent updates `docs/marketing-strategy.md` when changes touch `marketing/` or `apps/marketing/`.
+
+Re-run `/marketing-context` whenever your product or positioning shifts; it's idempotent and surfaces drift section by section rather than overwriting blindly.
+
+---
+
+## 17. Project-Specific Guidelines
 
 {{Add any project-specific conventions, patterns, or rules that don't fit the categories above}}
 

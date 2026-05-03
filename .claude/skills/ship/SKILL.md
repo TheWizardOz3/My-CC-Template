@@ -47,8 +47,9 @@ The agent applies brevity-enforced updates to:
 - `docs/changelog.md` — 1–2 lines, "Added/Changed/Fixed X"
 - `docs/project_status.md` — move feature from In Progress to Completed; trim sequencing detail
 - `docs/decision_log.md` — only if a non-obvious tradeoff was made (with `AI Instructions` block per AGENTS.md §11.2)
+- `docs/marketing-strategy.md` — only when the diff touches `marketing/` or `apps/marketing/`; same rules as `project_status.md`
 
-The agent will **not** touch `docs/architecture.md` or feature docs — that's your job here. If tech stack, schema, or API surface changed, update `docs/architecture.md` directly. Also update the feature doc itself: fill in any sections left as `{{TODO}}`, mark all tasks `[x]`, capture any post-hoc notes.
+The agent will **not** touch `docs/architecture.md`, feature docs, or `.agents/product-marketing-context.md` — that's your job here. If tech stack, schema, or API surface changed, update `docs/architecture.md` directly. If marketing positioning shifted, re-run `/marketing-context`. Also update the feature doc itself: fill in any sections left as `{{TODO}}`, mark all tasks `[x]`, capture any post-hoc notes.
 
 ---
 
