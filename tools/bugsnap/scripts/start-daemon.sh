@@ -7,6 +7,11 @@ set -e
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUGSNAP="$SCRIPT_DIR/../bin/bugsnap.js"
 
+# Anchor cwd to the project that contains these scripts so bugsnap resolves
+# the right .claude/bug-sessions/ regardless of launcher (Hammerspoon and
+# Shortcuts.app both spawn scripts with cwd=/).
+cd "$SCRIPT_DIR/../../.."
+
 # macOS Shortcuts runs with a minimal PATH. Prepend common Node install locations.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 _nvm_latest=$(ls -1 "$HOME/.nvm/versions/node" 2>/dev/null | sort -V | tail -1)
