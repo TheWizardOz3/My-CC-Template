@@ -1,6 +1,10 @@
 # Claude Code — personal overrides
 .claude/settings.local.json
 .claude/hooks/config/hooks-config.local.json
+.claude/scheduled_tasks.lock
+
+# bugsnap — captured browser sessions (local artifacts, not source)
+.claude/bug-sessions/
 
 # macOS
 .DS_Store
