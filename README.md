@@ -59,6 +59,8 @@ The hooks rely on a few command-line tools:
 
 ### 3. Open in Claude Code and run `/new-project`
 
+> **Trust the folder first.** Launch `claude` from a terminal in the new repo once and accept the "Do you trust the files in this folder?" prompt. Until a folder is trusted, Claude Code ignores the `permissions.allow` list in `.claude/settings.json` (deny/ask rules still apply), so every Bash/Edit call prompts. The VS Code extension doesn't always show this dialog — if a fresh clone is prompting for everything, that's why. Trust is per machine and per path; it does not travel with the repo.
+
 ```
 /new-project
 ```
@@ -76,6 +78,8 @@ It fills in the placeholders in `AGENTS.md` and `docs/*` and writes `docs/design
 ### 4. Personal overrides (optional)
 
 Copy `.claude/settings.local.json.example` → `.claude/settings.local.json` (gitignored) for per-developer tweaks like disabling a hook locally.
+
+Settings that should apply to *every* repo on your machine — `additionalDirectories` for sibling repos, `Read(//tmp/**)`, MCP tool allows like `mcp__context7__*` — belong in your user-level `~/.claude/settings.json`, not here. Arrays merge across user → project → local scopes, so nothing in the committed `settings.json` needs to change.
 
 ---
 

@@ -1,16 +1,24 @@
 {
-  "_comment": "Personal overrides for Claude Code in this project. Copy to settings.local.json (gitignored). Anything here takes precedence over .claude/settings.json. Examples below — uncomment what you want.",
+  "_comment": "Personal overrides for Claude Code in this project. Copy to settings.local.json (gitignored). Anything here takes precedence over .claude/settings.json; arrays (allow/ask/deny/additionalDirectories) MERGE across user → project → local scopes. Examples below — uncomment what you want. Settings you want in EVERY repo (additionalDirectories, MCP allows, Read(//tmp/**)) belong in ~/.claude/settings.json instead.",
 
   "_examples": {
     "permissions": {
       "allow": [
         "Bash(npm run dev:*)",
         "Bash(pnpm test:*)",
-        "WebFetch(domain:docs.anthropic.com)"
+        "WebFetch(domain:docs.anthropic.com)",
+        "Read(//tmp/**)",
+        "mcp__context7__resolve-library-id",
+        "mcp__context7__query-docs"
       ],
       "deny": [],
+      "additionalDirectories": [
+        "/absolute/path/to/parent-of-sibling-repos"
+      ],
       "defaultMode": "acceptEdits"
     },
+
+    "_path_syntax": "Read/Edit rules: `//abs/path` = filesystem root, `~/path` = home, `/path` = relative to the settings file's directory (project root here; ~/.claude in user settings), `path` = relative to cwd.",
 
     "env": {
       "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "32000",

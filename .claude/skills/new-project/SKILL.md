@@ -16,9 +16,10 @@ Walk a fresh clone of this template through five short interactive phases. Each 
 
 ## Phase 0: Pre-flight
 
-1. Check whether `docs/(ignore) brainstorm.md` exists and has content. If yes, read it — it's the user's raw seed material and replaces several questions below.
-2. Confirm scope with the user: "Run full onboarding (6 phases, ~10–15 min) or just the part you want?" Default is full.
-3. List the 6 phases:
+1. **Folder trust check.** Run `jq --arg p "$PWD" '.projects[$p].hasTrustDialogAccepted // false' ~/.claude.json`. If it prints `false`, tell the user: until this folder is trusted, Claude Code ignores the `permissions.allow` list in `.claude/settings.json` and will prompt for every Bash/Edit call. Fix: launch `claude` from a terminal in this directory once and accept the trust prompt, or run `jq --arg p "$PWD" '.projects[$p].hasTrustDialogAccepted = true' ~/.claude.json > /tmp/cj && mv /tmp/cj ~/.claude.json`, then restart the session. Do not edit `~/.claude.json` yourself without the user's OK — it's on the permission ask list.
+2. Check whether `docs/(ignore) brainstorm.md` exists and has content. If yes, read it — it's the user's raw seed material and replaces several questions below.
+3. Confirm scope with the user: "Run full onboarding (6 phases, ~10–15 min) or just the part you want?" Default is full.
+4. List the 6 phases:
    1. Product spec
    2. Architecture
    3. Environment
